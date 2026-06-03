@@ -23,14 +23,16 @@ from typing import List, Dict
 import asyncio
 import aiohttp
 ```
+
 3. This shows current cpu utilization during load , u see how percentage spiked first , then hpa did the math nd changed the no of replica :
 
 <img width="1327" height="750" alt="image" src="https://github.com/user-attachments/assets/bb6391b9-63b2-4b10-a2cc-e465cebd36de" />
 
 
 4. Pods status while load was increased and decreased , hpa autoscaled pods to 3 and then back to minimum 1 :
-   
-   NAME                                  READY   STATUS              RESTARTS   AGE
+
+```bash
+NAME                                  READY   STATUS              RESTARTS   AGE
 fastapi-deployment-66f5dcf57b-jmbwl   1/1     Running             0          4h9m
 fastapi-deployment-66f5dcf57b-t6nvb   0/1     Pending             0          0s
 fastapi-deployment-66f5dcf57b-t6nvb   0/1     ContainerCreating   0          0s
@@ -38,6 +40,8 @@ fastapi-deployment-66f5dcf57b-t6nvb   1/1     Running             0          2s
 fastapi-deployment-66f5dcf57b-698tj   0/1     Pending             0          0s
 fastapi-deployment-66f5dcf57b-698tj   0/1     ContainerCreating   0          0s
 fastapi-deployment-66f5dcf57b-698tj   1/1     Running             0          2s
+```
+
 
 5. CRUD API
 
@@ -51,6 +55,7 @@ Cloud-Native Autoscaling: Instrumented with a Kubernetes deployment configuratio
 API Endpoints Summary:
 
 | Method | Endpoint | Description |
+| :--- | :--- | :--- |
 | `POST` | `/predict` | Receives text, processes it through the ML model, and returns sentiment analysis. |
 | `GET` | `/items` | Retrieves all historical inference records. |
 | `GET` | `/items/{id}` | Retrieves a specific inference record by ID. |
