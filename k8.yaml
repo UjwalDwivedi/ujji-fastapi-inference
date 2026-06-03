@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi
+  template:
+    metadata:
+      labels:
+        app: fastapi
+    spec:
+      containers:
+      - name: fastapi-container
+        image: ujji:v1
+        imagePullPolicy: Never   
+        ports:
+        - containerPort: 8000
+        resources:               
+          requests:
+            cpu: "100m"          
+            memory: "128Mi"
+          limits:
+            cpu: "250m"          
+            memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-service
+spec:
+  selector:
+    app: fastapi
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8000
+  type: ClusterIP
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: fastapi-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: fastapi-deployment
+  minReplicas: 1
+  maxReplicas: 3
+  metrics:
+  - type: Resourcec
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 50   
