@@ -12,11 +12,15 @@ spec:
     metadata:
       labels:
         app: fastapi
+      annotations:
+          prometheus.io/scrape: "true"
+          prometheus.io/port: "8000"
+          prometheus.io/path: "/metrics"
     spec:
       containers:
       - name: fastapi-container
-        image: ujji:v1
-        imagePullPolicy: Never   
+        image: ujji2006/ujji:v9
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
         resources:               
@@ -52,7 +56,7 @@ spec:
   minReplicas: 1
   maxReplicas: 3
   metrics:
-  - type: Resourcec
+  - type: Resource
     resource:
       name: cpu
       target:
