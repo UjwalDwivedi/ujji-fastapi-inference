@@ -92,6 +92,8 @@ async def read_all_predictions():
 @app.get("/items/{item_id}", response_model=InferenceRecord)
 async def read_prediction(item_id: int):
     logger.info(f"GET /items/{item_id} - Fetching record")
+    if item_id < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Item ID cannot be negative.")
     if item_id not in IN_MEMORY_DB:
         logger.error(f"GET /items/{item_id} FAILED - Record not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Inference record with ID {item_id} not found")
@@ -100,6 +102,8 @@ async def read_prediction(item_id: int):
 @app.put("/items/{item_id}", response_model=InferenceRecord)
 async def update_prediction(item_id: int, updated_item: TextData):
     logger.info(f"PUT /items/{item_id} - Updating record")
+    if item_id<0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Item ID cannot be negative.")
     if item_id not in IN_MEMORY_DB:
         logger.error(f"PUT /items/{item_id} FAILED - Record not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Cannot update. Record with ID {item_id} not found")
@@ -117,6 +121,9 @@ async def update_prediction(item_id: int, updated_item: TextData):
 @app.delete("/items/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_prediction(item_id: int):
     logger.info(f"DELETE /items/{item_id} - Attempting deletion")
+    
+    if item_id < 0:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail="Item ID cannot be negative.")
     if item_id not in IN_MEMORY_DB:
         logger.error(f"DELETE /items/{item_id} FAILED - Record not found")
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Cannot delete. Record with ID {item_id} not found")
